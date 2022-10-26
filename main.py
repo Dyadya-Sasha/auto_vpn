@@ -6,6 +6,7 @@
 import subprocess
 import paramiko
 import sys
+import os
 import configparser
 
 # ip = "192.168.0.155"
@@ -40,11 +41,12 @@ def set_hostname(host_name):
 
 
 if __name__ == '__main__':
-    choice = input("Do you want to create default settings config? (y/n) ")
-    if choice == "y":
-        config()
-    else:
-        pass
+    if not os.path.isfile('config.ini'):
+        choice = input("Do you want to create default settings config? (y/n) ")
+        if choice == "y":
+            config()
+        else:
+            pass
 
     set_hostname(sys.argv[2])
     print("---------------------\n" + "Script name is: ", sys.argv[0] + "\n---------------------")
