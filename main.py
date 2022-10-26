@@ -32,13 +32,13 @@ def ssh_connect():
         client = paramiko.client.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(sys.argv[1], port=_port, username=_user, password=_password)
-#        stdin, _stdout, _stderr = client.exec_command('cd /home/user; echo {}'.format(hostname) + '> test_file; hostname -f')
-#        print(_stdout.read().decode())
+        stdin, _stdout, _stderr = client.exec_command('cd /home/user; echo {}'.format(hostname) + '> test_file; hostname -f')
+        print(_stdout.read().decode())
     except TimeoutError:
         print("\n{}Host doesnt respond{}".format('\033[1m', '\033[0m'))
+        sys.exit()
     finally:
-        client.close()
-        sys.exit()                                                                                          
+        client.close()                                                                                          
 
 
 def set_hostname(host_name):
