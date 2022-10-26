@@ -32,8 +32,8 @@ def ssh_connect():
         client = paramiko.client.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(sys.argv[1], port=_port, username=_user, password=_password)
-        _stdout = client.exec_command('cd /home/user; echo {}'.format(hostname) + '> test_file; hostname -f')
-        print(_stdout.read().decode())
+        _stdin, _stdout, _stderr = client.exec_command('cd /home/user; echo {}'.format(hostname) + '> test_file; hostname -f')
+        print(_stdout.decode())
     except TimeoutError:
         print("\n{}Host doesnt respond{}".format('\033[1m', '\033[0m'))
         sys.exit()
@@ -69,6 +69,8 @@ if __name__ == '__main__':
             sys.exit("Not correct FQDN")
         case _:
             print("Wrong answer, motherfucker!")
+            sys.exit()
+            
     print("PROCEEDING")
     cmd = "ssh {}@{} -p{}".format(_user, sys.argv[1], _port)
     input_cmd = "cd /home/user/TEST; echo 'HUI' >> test"
