@@ -61,7 +61,7 @@ if __name__ == '__main__':
     print("Hostname is: ", sys.argv[2] + "\n---------------------")
     ssh_connect()
     print("I am here 1")
-    ans = input("Is the FQDN correct? (y/n): ")
+    ans = input("Is the FQDN correct? (y/n): ") # Эта хуйня в винде почему то не работает
     match ans:
         case "y":
             print("OK")
