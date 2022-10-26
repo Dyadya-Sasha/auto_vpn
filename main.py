@@ -9,7 +9,7 @@ import sys
 import os
 import configparser
 
-# ip = "192.168.0.155"
+
 _user = "user"
 _port = 3578
 _password = "qweqwe"
@@ -52,7 +52,6 @@ if __name__ == '__main__':
     print("---------------------\n" + "Script name is: ", sys.argv[0] + "\n---------------------")
     print("IP address is: ", sys.argv[1] + "\n---------------------")
     print("Hostname is: ", sys.argv[2] + "\n---------------------")
-#    print(hostname)
     ssh_connect()
     ans = input("Is the FQDN correct? (y/n): ")
     match ans:
