@@ -9,7 +9,6 @@ import sys
 import configparser
 import os
 
-
 _user = "root"
 _port = 3578
 hostname_short = "combined-ipdr01"
@@ -33,7 +32,6 @@ def config_read():
     config_file.read('config.ini')
     VPN_git = config_file['DEFAULT']['VPN_GIT_FOLDER']
     print(VPN_git)
-
 
 
 def ssh_connect():
@@ -112,19 +110,25 @@ if __name__ == '__main__':
         VPN_CMD = "cd {}/keys; scp -P{} sorm01-prod-dmz_{}.ovpn {}@{}:/root".format(VPN_git, _port, _5octets, _user, sys.argv[1])
         subprocess.run(VPN_CMD, check=True, shell=True)
 
-        VPN_CMD = "ssh {}@{} -p{}".format(_user, sys.argv[1], _port)
-        print("Installing OpenVpn on remote host")
-#        ssh_Process = subprocess.run(['ssh {}'.format(VPN_CMD)], stdout=subprocess.PIPE, universal_newlines=True, shell=True, check=True)
+        val = input("\n\nDO NOT FORGET TO RUN 'sudo /opt/puppetlabs/bin/puppet agent -tv' on VPN server ( <domain_name>@10.61.5.11 ). PRESS ANY KEY TO CONFIRM: ")
+
+        print("Installing OpenVPN on remote host")
+        #        ssh_Process = subprocess.run(['ssh {}'.format(VPN_CMD)], stdout=subprocess.PIPE, universal_newlines=True, shell=True, check=True)
         client = paramiko.client.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(sys.argv[1], port=_port, username=_user)
-        _stdin, _stdout, _stderr = client.exec_command('ssh {}@{} -p{}'.format(_user, sys.argv[1], _port) + '; cd /etc/apt/sources.list.d; rm nt.list*; apt update; apt install openvpn')
+        _stdin, _stdout, _stderr = client.exec_command('ssh {}@{} -p{}'.format(_user, sys.argv[1], _port) + '; cd /etc/apt/sources.list.d; rm nt.list*; apt update; apt install openvpn; ' +
+                                                       'mv /root/sorm01-prod-dmz_{}.ovpn /etc/openvpn/sorm01-prod-dmz_{}.conf; '.format(_5octets, _5octets) +
+                                                       'systemctl enable openvpn@sorm01-prod-dmz_{}; '.format(_5octets) +
+                                                       'systemctl start openvpn@sorm01-prod-dmz_{}'.format(_5octets))
         _stdout.channel.set_combine_stderr(True)
         output = _stdout.readlines()
-        print("After Popen")
 
     except subprocess.CalledProcessError:
         print("Some shit happened :\'(")
-#    except FileNotFoundError:
-#        print("\nFile not found ")
-
+    except FileNotFoundError:
+        print("\nFile not found ")
+    except TimeoutError:
+        print("Timed out!")
+    except paramiko.SSHException as e:
+        print("SSH error {}".format(e))
