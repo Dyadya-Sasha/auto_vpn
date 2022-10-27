@@ -8,7 +8,7 @@ import paramiko
 import sys
 import configparser
 import os
-from pathlib import Path
+
 
 _user = "root"
 _port = 3578
@@ -38,20 +38,20 @@ def config_read():
 
 def ssh_connect():
     try:
-        client = paramiko.client.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(sys.argv[1], port=_port, username=_user)
-        _stdin, _stdout, _stderr = client.exec_command(
+        client1 = paramiko.client.SSHClient()
+        client1.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client1.connect(sys.argv[1], port=_port, username=_user)
+        _stdin1, _stdout1, _stderr1 = client1.exec_command(
             'sed -i 2d /etc/hosts; sed -i \'2i{}\''.format(hostname) + ' /etc/hosts;' + 'echo {}'.format(hostname_short) + ' > /etc/hostname; '
                                                                                                                            'hostname -F /etc/hostname;'
                                                                                                                            'hostname -f')
         print("\n----------------")
-        print(_stdout.read().decode())
+        print(_stdout1.read().decode())
     except TimeoutError:
         print("\n{}Host doesnt respond{}".format('\033[1m', '\033[0m'))
         sys.exit()
     finally:
-        client.close()
+        client1.close()
 
 
 def set_credentials(segment, provider_name, city, ip):
@@ -99,23 +99,32 @@ if __name__ == '__main__':
     try:
         VPN_CMD = "cd {}/easy-rsa; ./easyrsa gen-req {} nopass; ./easyrsa sign-req client {}".format(VPN_git, _5octets, _5octets)
         subprocess.run(VPN_CMD, check=True, shell=True)
-    except subprocess.CalledProcessError:
-        print("Some shit happened :\'(")
 
-    try:
         VPN_CMD = "cd {}/ccd; touch {}; echo 'ifconfig-push 172.24.112.{} 255.255.240.0' > {}".format(VPN_git, _5octets, VPN_ip, _5octets)
         subprocess.run(VPN_CMD, check=True, shell=True)
-    except subprocess.CalledProcessError:
-        print("Some shit happened :\'(")
 
-    try:
         VPN_CMD = "cd {}/scripts; ./create_client_ovpn.sh {}".format(VPN_git, _5octets)
         subprocess.run(VPN_CMD, check=True, shell=True)
-    except subprocess.CalledProcessError:
-        print("Some shit happened :\'(")
 
-    try:
-        VPN_CMD = "cd {}; git add --all; git commit -m \"Added VPN client '{}'\"; git push"
+        VPN_CMD = "cd {}; git add --all; git commit -m \"Added VPN client '{}'\"; git push".format(VPN_git, _5octets)
         subprocess.run(VPN_CMD, check=True, shell=True)
+
+        VPN_CMD = "cd {}/keys; scp -P{} sorm01-prod-dmz_{}.ovpn {}@{}:/root".format(VPN_git, _port, _5octets, _user, sys.argv[1])
+        subprocess.run(VPN_CMD, check=True, shell=True)
+
+        VPN_CMD = "ssh {}@{} -p{}".format(_user, sys.argv[1], _port)
+        print("Installing OpenVpn on remote host")
+#        ssh_Process = subprocess.run(['ssh {}'.format(VPN_CMD)], stdout=subprocess.PIPE, universal_newlines=True, shell=True, check=True)
+        client = paramiko.client.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(sys.argv[1], port=_port, username=_user)
+        _stdin, _stdout, _stderr = client.exec_command('ssh {}@{} -p{}'.format(_user, sys.argv[1], _port) + '; cd /etc/apt/sources.list.d; rm nt.list*; apt update; apt install openvpn')
+        _stdout.channel.set_combine_stderr(True)
+        output = _stdout.readlines()
+        print("After Popen")
+
     except subprocess.CalledProcessError:
         print("Some shit happened :\'(")
+#    except FileNotFoundError:
+#        print("\nFile not found ")
+
