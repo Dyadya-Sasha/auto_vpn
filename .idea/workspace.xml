@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="054f1304-7e1a-4c8d-b182-d23f288bb8b1" name="Changes" comment="ein mehr commit">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="054f1304-7e1a-4c8d-b182-d23f288bb8b1" name="Changes" comment="The last one for 27.10">
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -82,7 +81,21 @@
       <option name="project" value="LOCAL" />
       <updated>1666881812916</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="The last one for 27.10">
+      <created>1666883432892</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1666883432892</updated>
+    </task>
+    <task id="LOCAL-00008" summary="The last one for 27.10">
+      <created>1666883467342</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1666883467342</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -100,6 +113,7 @@
     <MESSAGE value="the first one" />
     <MESSAGE value="the second one" />
     <MESSAGE value="ein mehr commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="ein mehr commit" />
+    <MESSAGE value="The last one for 27.10" />
+    <option name="LAST_COMMIT_MESSAGE" value="The last one for 27.10" />
   </component>
 </project>

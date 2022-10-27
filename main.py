@@ -105,7 +105,7 @@ if __name__ == '__main__':
         VPN_CMD = "cd {}/keys; scp -P{} sorm01-prod-dmz_{}.ovpn {}@{}:/root".format(VPN_git, _port, _5octets, _user, sys.argv[1])
         subprocess.run(VPN_CMD, check=True, shell=True)
 
-        val = input("\n\nDO NOT FORGET TO RUN 'sudo /opt/puppetlabs/bin/puppet agent -tv' on VPN server ( <domain_name>@10.61.5.11 ). PRESS ANY KEY TO CONFIRM: ")
+        val = input("\n\nDO NOT FORGET TO RUN 'sudo /opt/puppetlabs/bin/puppet agent -tv' on VPN server ( <domain_name>@10.61.5.11 ), OTHERWISE U WILL GET FAILED ON VPN AUTH. PRESS ANY KEY TO CONFIRM: ")
 
         print("Installing OpenVPN on remote host")
         #        ssh_Process = subprocess.run(['ssh {}'.format(VPN_CMD)], stdout=subprocess.PIPE, universal_newlines=True, shell=True, check=True)
