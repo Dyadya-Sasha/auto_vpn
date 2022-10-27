@@ -65,6 +65,11 @@ if __name__ == '__main__':
             config_write()
         else:
             pass
+    if sys.argv[1] == "-s":
+        config_write()
+    else:
+        pass
+
     config_read()
     print("---------------------\n" + "Script name is: ", sys.argv[0] + "\n---------------------")
     print("IP address is: ", sys.argv[1] + "\n---------------------")
