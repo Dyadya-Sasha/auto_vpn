@@ -51,7 +51,8 @@ def set_credentials(segment, provider_name, city, ip):
     global hostname
     hostname = "127.0.1.1       combined-ipdr01.sorm-2-3.{}.{}.{}.prod.s8.norsi-trans.org   combined-ipdr01".format(segment, provider_name, city)
     global _5octets
-    _5octets = hostname.removesuffix(".prod.s8.norsi-trans.org   combined-ipdr01").removeprefix("127.0.1.1       ")
+#    _5octets = hostname.removesuffix(".prod.s8.norsi-trans.org   combined-ipdr01").removeprefix("127.0.1.1       ")
+    _5octets = "combined-ipdr01.sorm-2-3.{}.{}.{}"
     print("\n5 octets are {}".format(_5octets))
     global VPN_ip
     VPN_ip = ip
@@ -125,6 +126,6 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print("\nFile not found ")
     except TimeoutError:
-        print("Timed out!")
+        print("Time out!")
     except paramiko.SSHException as e:
         print("SSH error {}".format(e))
