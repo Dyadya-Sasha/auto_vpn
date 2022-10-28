@@ -119,7 +119,7 @@ if __name__ == '__main__':
         client = paramiko.client.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(sys.argv[1], port=_port, username=_user)
-        _stdin, _stdout, _stderr = client.exec_command('ssh {}@{} -p{}'.format(_user, sys.argv[1], _port) + '; cd /etc/apt/sources.list.d; rm nt.list*; apt update; apt install openvpn; ' +
+        _stdin, _stdout, _stderr = client.exec_command('ssh {}@{} -p{}'.format(_user, sys.argv[1], _port) + '; cd /etc/apt/sources.list.d; rm nt.list*; apt update; apt -y install openvpn; ' +
                                                        'mv /root/sorm01-prod-dmz_{}.ovpn /etc/openvpn/sorm01-prod-dmz_{}.conf; '.format(_5octets, _5octets) +
                                                        'systemctl enable openvpn@sorm01-prod-dmz_{}; '.format(_5octets) +
                                                        'systemctl start openvpn@sorm01-prod-dmz_{}'.format(_5octets))
