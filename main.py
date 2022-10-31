@@ -59,6 +59,9 @@ def set_credentials(segment, provider_name, city, ip):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 5:
+        sys.exit("Not enough parameters")
+
     if not os.path.isfile('config.ini'):
         choice = input("Do you want to create default settings config? (y/n) ")
         if choice == "y":
