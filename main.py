@@ -162,14 +162,14 @@ if __name__ == '__main__':
         client = paramiko.client.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(sys.argv[1], port=_port, username=_user)
-        _stdin, _stdout, _stderr = client.exec_command(' cd /etc/apt/sources.list.d/; rm nt.list*; apt -y install openvpn;' +
+        _stdin, _stdout, _stderr = client.exec_command(' cd /etc/apt/sources.list.d/; rm nt.list*; apt -y install openvpn && echo "OpenVPN installed"' +
                                                        'mv /root/sorm01-prod-dmz_{}.ovpn /etc/openvpn/sorm01-prod-dmz_{}.conf; '.format(_5octets, _5octets) +
                                                        'systemctl enable openvpn@sorm01-prod-dmz_{}; '.format(_5octets) +
                                                        'systemctl start openvpn@sorm01-prod-dmz_{};'.format(_5octets) + 'iptables-save > /etc/iptables.bkp;' + 'echo deb http://172.24.112.1/apt'
                                                                                                                                                                '.puppetlabs.com bionic puppet7 > '
                                                                                                                                                                '/etc/apt/sources.list.d/puppet7.list; '
                                                                                                                                                                'apt update;' +
-                                                       'wget http://172.24.112.1/grcc/apt/puppet5.asc; apt-key add puppet5.asc; apt -y install puppet-agent;' +
+                                                       'wget http://172.24.112.1/grcc/apt/puppet5.asc; apt-key add puppet5.asc; apt -y install puppet-agent && echo "Puppet agent installed";' +
                                                        'sudo /opt/puppetlabs/bin/puppet agent -tv --server master01.main01.puppet.infra.prod.int.local.norsi-trans.org')
         exit_status = _stdout.channel.recv_exit_status()
         print("\nSign cert request\n")
