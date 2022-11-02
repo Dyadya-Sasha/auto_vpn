@@ -75,11 +75,12 @@ def set_credentials(sorm_type, segment, provider_name, city, ip):
 
 
 def puppet_prepare(sorm_type, segment, provider_name, city):
-    sorm_type_corrected = sorm_type.rstrip(sorm_type[-2])
-    puppet_cmd = "mkdir -p {}/s8/prod/{}/{}/{}/sorm-2-3/{}/nodes;".format(PUPPET_GIT, city, provider_name, segment, sorm_type)
+    sorm_type_corrected = sorm_type[:-2]
+    print("Corected SORM name is {}".format(sorm_type_corrected))
+    puppet_cmd = "mkdir -p {}/s8/prod/{}/{}/{}/sorm-2-3/{}/nodes;".format(PUPPET_GIT, city, provider_name, segment, sorm_type_corrected)
     subprocess.run(puppet_cmd, check=True, shell=True)
     puppet_cmd = "cat /home/$USER/puppet_skel > {}/s8/prod/{}/{}/{}/sorm-2-3/{}/nodes/{}.sorm-2-3.{}.{}.{}.prod.s8.norsi-trans.org.yaml".format(PUPPET_GIT, city, provider_name,
-                                                                                                                                                segment, sorm_type, sorm_type, segment, provider_name,
+                                                                                                                                                segment, sorm_type_corrected, sorm_type, segment, provider_name,
                                                                                                                                                 city)
     subprocess.run(puppet_cmd, check=True, shell=True)
 
