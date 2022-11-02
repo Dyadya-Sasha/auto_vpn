@@ -62,24 +62,24 @@ def ssh_connect():
         client1.close()
 
 
-def set_credentials(segment, provider_name, city, ip):
+def set_credentials(sorm_type, segment, provider_name, city, ip):
     global hostname
     global hosts_line
-    hostname = "combined-ipdr01.sorm-2-3.{}.{}.{}.prod.s8.norsi-trans.org".format(segment, provider_name, city)
-    hosts_line = "127.0.1.1       {}   combined-ipdr01".format(hostname)
+    hostname = "{}.sorm-2-3.{}.{}.{}.prod.s8.norsi-trans.org".format(sorm_type, segment, provider_name, city)
+    hosts_line = "127.0.1.1       {}   {}".format(hostname,sorm_type)
     global _5octets
-    _5octets = "combined-ipdr01.sorm-2-3.{}.{}.{}".format(segment, provider_name, city)
+    _5octets = "{}.sorm-2-3.{}.{}.{}".format(sorm_type, segment, provider_name, city)
     print("\n5 octets are {}\n".format(_5octets))
     global VPN_ip
     VPN_ip = ip
 
 
-def puppet_prepare(segment, provider_name, city):
-    puppet_cmd = "mkdir -p {}/s8/prod/{}/{}/{}/sorm-2-3/combined-ipdr/nodes;".format(PUPPET_GIT, city, provider_name, segment)
+def puppet_prepare(sorm_type, segment, provider_name, city):
+    puppet_cmd = "mkdir -p {}/s8/prod/{}/{}/{}/sorm-2-3/{}/nodes;".format(PUPPET_GIT, city, provider_name, segment, sorm_type)
     subprocess.run(puppet_cmd, check=True, shell=True)
-    puppet_cmd = "cat /home/$USER/puppet_skel > {}/s8/prod/{}/{}/{}/sorm-2-3/combined-ipdr/nodes/combined-ipdr01.sorm-2-3.{}.{}.{}.prod.s8.norsi-trans.org.yaml".format(PUPPET_GIT, city, provider_name,
-                                                                                                                                                                        segment, segment, provider_name,
-                                                                                                                                                                        city)
+    puppet_cmd = "cat /home/$USER/puppet_skel > {}/s8/prod/{}/{}/{}/sorm-2-3/{}/nodes/{}.sorm-2-3.{}.{}.{}.prod.s8.norsi-trans.org.yaml".format(PUPPET_GIT, city, provider_name,
+                                                                                                                                                segment, sorm_type, sorm_type, segment, provider_name,
+                                                                                                                                                city)
     subprocess.run(puppet_cmd, check=True, shell=True)
 
 
@@ -101,13 +101,14 @@ if __name__ == '__main__':
     config_read()
     print("---------------------\n" + "Script name is: ", sys.argv[0] + "\n---------------------")
     print("IP address is: ", sys.argv[1] + "\n---------------------")
-    print("Segment is: ", sys.argv[2] + "\n---------------------")
-    print("Provider name is: ", sys.argv[3] + "\n---------------------")
-    print("City is: ", sys.argv[4] + "\n---------------------")
-    print("IP address is (the last octet): ", sys.argv[5] + "\n---------------------")
+    print("SORM name is : ", sys.argv[2] + "\n---------------------")
+    print("Segment is: ", sys.argv[3] + "\n---------------------")
+    print("Provider name is: ", sys.argv[4] + "\n---------------------")
+    print("City is: ", sys.argv[5] + "\n---------------------")
+    print("IP address is (the last octet): ", sys.argv[6] + "\n---------------------")
 
-    set_credentials(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
-    puppet_prepare(sys.argv[2], sys.argv[3], sys.argv[4])
+    set_credentials(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+    puppet_prepare(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
     ssh_connect()
 
     ans = input("\nIs the FQDN correct? (y/n): ")  # Эта хуйня в винде почему то не работает
@@ -156,6 +157,7 @@ if __name__ == '__main__':
         sleep(6)
 
         val = input("\n\nDO NOT FORGET TO CORRECT IPTABLES RULES BEFORE CONTINUING. PRESS ENTER TO CONFIRM.")
+
         Puppet_push = ("cd {}; git add --all; git commit -m \"Added iptables for client '{}'\"; git push ".format(PUPPET_GIT, sys.argv[3]))
         print("\nPUSHING Puppet CMD {}".format(Puppet_push))
         subprocess.run(Puppet_push, check=True, shell=True)
