@@ -126,18 +126,18 @@ if __name__ == '__main__':
     # print("\n========================\nPROCEEDING\n ============================")
 
     try:
-        # VPN_CMD = "cd {}/easy-rsa; ./easyrsa gen-req {} nopass; ./easyrsa sign-req client {}".format(VPN_git, Sorm_name, Sorm_name)
-        # subprocess.run(VPN_CMD, check=True, shell=True)
-        #
-        # VPN_CMD = "cd {}/ccd; touch {}; echo 'ifconfig-push {} 255.255.240.0' > {}".format(VPN_git, Sorm_name, IP_address, Sorm_name)
-        # subprocess.run(VPN_CMD, check=True, shell=True)
-        #
-        # VPN_CMD = "cd {}/scripts; ./create_client_ovpn.sh {}".format(VPN_git, Sorm_name)
-        # subprocess.run(VPN_CMD, check=True, shell=True)
+        VPN_CMD = "cd {}/easy-rsa; ./easyrsa gen-req {} nopass; ./easyrsa sign-req client {}".format(VPN_git, Sorm_name, Sorm_name)
+        subprocess.run(VPN_CMD, check=True, shell=True)
 
-        # VPN_CMD = "cd {}; git add --all; git commit -m \"Added VPN client '{}'\"; git push".format(VPN_git, Sorm_name)
-        # subprocess.run(VPN_CMD, check=True, shell=True)
+        VPN_CMD = "cd {}/ccd; touch {}; echo 'ifconfig-push {} 255.255.240.0' > {}".format(VPN_git, Sorm_name, IP_address, Sorm_name)
+        subprocess.run(VPN_CMD, check=True, shell=True)
 
+        VPN_CMD = "cd {}/scripts; ./create_client_ovpn.sh {}".format(VPN_git, Sorm_name)
+        subprocess.run(VPN_CMD, check=True, shell=True)
+
+        VPN_CMD = "cd {}; git add --all; git commit -m \"Added VPN client '{}'\"; git push".format(VPN_git, Sorm_name)
+        subprocess.run(VPN_CMD, check=True, shell=True)
+        #
         # VPN_CMD = "cd {}/keys; scp -P{} sorm01-prod-dmz_{}.ovpn {}@{}:/root".format(VPN_git, _port, _5octets, _user, sys.argv[1])
         # subprocess.run(VPN_CMD, check=True, shell=True)
 
