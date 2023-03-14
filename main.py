@@ -33,13 +33,15 @@ def config_write():
 def config_read():
     global VPN_git
     # global PUPPET_GIT
-    # global DOMAIN_NAME
+    global DOMAIN_NAME
     config_file = configparser.ConfigParser()
     config_file.read('config.ini')
     VPN_git = config_file['DEFAULT']['VPN_GIT_FOLDER']
+    DOMAIN_NAME = config_file['DEFAULT']['DOMAIN_NAME']
     # PUPPET_GIT = config_file['DEFAULT']['PUPPET_GIT_FOLDER']
-    # DOMAIN_NAME = config_file['DEFAULT']['DOMAIN_NAME']
-    print("VPN_git is at {}".format(VPN_git))
+
+    print("VPN_GIT is at {}".format(VPN_git))
+    print("DOMAIN NAME is {}".format(DOMAIN_NAME))
     # print(PUPPET_GIT)
 
 
