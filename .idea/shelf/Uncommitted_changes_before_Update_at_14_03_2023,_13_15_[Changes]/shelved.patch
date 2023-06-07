@@ -1,0 +1,15 @@
+Index: config.ini
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[DEFAULT]\nvpn_git_folder = /home/shard/sorm-vpn/vpngit/openvpn-sorm01-prod-dmz/\npuppet_git_folder = /home/shard/sorm-vpn/puppetgit/nt-puppet-hiera-sorm/\ndomain_name = a.pivkin\n\n
+===================================================================
+diff --git a/config.ini b/config.ini
+--- a/config.ini	
++++ b/config.ini	
+@@ -1,5 +1,4 @@
+ [DEFAULT]
+-vpn_git_folder = /home/shard/sorm-vpn/vpngit/openvpn-sorm01-prod-dmz/
+-puppet_git_folder = /home/shard/sorm-vpn/puppetgit/nt-puppet-hiera-sorm/
++vpn_git_folder = /home/shard/SORM_VPN/openvpn-sorm01-prod-dmz
+ domain_name = a.pivkin
+ 

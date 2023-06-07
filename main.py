@@ -106,8 +106,8 @@ if __name__ == '__main__':
 
     config_read()
 
-    IP_address = input("Enter ip address of sorm: ")
-    Sorm_name = str(input("Enter name of sorm: "))
+    IP_address = input("Enter full ip address of sorm: ")
+    Sorm_name = str(input("Enter name of sorm (first 5 octets): "))
 
     # set_credentials(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
     # puppet_prepare(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
