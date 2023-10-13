@@ -45,52 +45,11 @@ def config_read():
     # print(PUPPET_GIT)
 
 
-# def ssh_connect():
-#     try:
-#         client1 = paramiko.client.SSHClient()
-#         client1.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-#         client1.connect(sys.argv[1], port=_port, username=_user)
-#         _stdin1, _stdout1, _stderr1 = client1.exec_command(
-#             'sed -i 2d /etc/hosts; sed -i \'2i127.0.1.1     {}  combined-ipdr01\''.format(hostname) + ' /etc/hosts;' + 'sed -i 3d /etc/hosts; sed -i \'3i{}\' /etc/hosts;'.format(
-#                 puppet_repo) + 'echo {}'.format(hostname_short) + ' > /etc/hostname; '
-#                                                                   'hostname -F '
-#                                                                   '/etc/hostname; '
-#                                                                   'hostname -f')
-#         print("\n----------------")
-#         print(_stdout1.read().decode())
-#     except TimeoutError:
-#         print("\n{}Host doesnt respond{}".format('\033[1m', '\033[0m'))
-#         sys.exit()
-#     finally:
-#         client1.close()
-
 def readlines(stdout):
     line = ''
     while stdout.channel.recv_ready():
         line += stdout.readline(1)
     return line
-
-# def set_credentials(sorm_type, segment, provider_name, city, ip):
-#     global hostname
-#     global hosts_line
-#     hostname = "{}.sorm-2-3.{}.{}.{}.prod.s8.norsi-trans.org".format(sorm_type, segment, provider_name, city)
-#     hosts_line = "127.0.1.1       {}   {}".format(hostname, sorm_type)
-#     global _5octets
-#     _5octets = "{}.sorm-2-3.{}.{}.{}".format(sorm_type, segment, provider_name, city)
-#     print("\n5 octets are {}\n".format(_5octets))
-#     global VPN_ip
-#     VPN_ip = ip
-
-
-# def puppet_prepare(sorm_type, segment, provider_name, city):
-#     sorm_type_corrected = sorm_type[:-2]
-#     print("Corected SORM name is {}".format(sorm_type_corrected))
-#     puppet_cmd = "mkdir -p {}/s8/prod/{}/{}/{}/sorm-2-3/{}/nodes;".format(PUPPET_GIT, city, provider_name, segment, sorm_type_corrected)
-#     subprocess.run(puppet_cmd, check=True, shell=True)
-#     puppet_cmd = "cat /home/$USER/puppet_skel > {}/s8/prod/{}/{}/{}/sorm-2-3/{}/nodes/{}.sorm-2-3.{}.{}.{}.prod.s8.norsi-trans.org.yaml".format(PUPPET_GIT, city, provider_name,
-#                                                                                                                                                 segment, sorm_type_corrected, sorm_type, segment, provider_name,
-#                                                                                                                                                 city)
-#     subprocess.run(puppet_cmd, check=True, shell=True)
 
 
 if __name__ == '__main__':
@@ -109,24 +68,6 @@ if __name__ == '__main__':
     IP_address = input("Enter full ip address of sorm: ")
     Sorm_name = str(input("Enter name of sorm (first 5 octets): "))
 
-    # set_credentials(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
-    # puppet_prepare(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
-    # ssh_connect()
-    #
-    # ans = input("\nIs the FQDN correct? (y/n): ")  # Эта хуйня в винде почему то не работает
-    # match ans:
-    #     case "y":
-    #         print("OK")
-    #         pass
-    #     case "n":
-    #         print("Exiting")
-    #         sys.exit("Not correct FQDN")
-    #     case _:
-    #         print("Wrong answer, motherfucker!")
-    #         sys.exit()
-    #
-    # print("\n========================\nPROCEEDING\n ============================")
-
     try:
         VPN_CMD = "cd {}/easy-rsa; ./easyrsa gen-req {} nopass; ./easyrsa sign-req client {}".format(VPN_git, Sorm_name, Sorm_name)
         subprocess.run(VPN_CMD, check=True, shell=True)
@@ -135,6 +76,9 @@ if __name__ == '__main__':
         subprocess.run(VPN_CMD, check=True, shell=True)
 
         VPN_CMD = "cd {}/scripts; ./create_client_ovpn.sh {}".format(VPN_git, Sorm_name)
+        subprocess.run(VPN_CMD, check=True, shell=True)
+
+        VPN_CMD = "cd {}; git pull".format(VPN_git)
         subprocess.run(VPN_CMD, check=True, shell=True)
 
         VPN_CMD = "cd {}; git add --all; git commit -m \"Added VPN client '{}'\"; git push".format(VPN_git, Sorm_name)
@@ -147,7 +91,7 @@ if __name__ == '__main__':
 
         vpn_ssh = paramiko.client.SSHClient()
         vpn_ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        vpn_ssh.connect('10.61.5.11', username="a.pivkin")
+        vpn_ssh.connect('10.61.5.11', username=DOMAIN_NAME)
         _stdout_, _stdin_, _stderr_ = vpn_ssh.exec_command('sudo /opt/puppetlabs/bin/puppet agent -tv', get_pty=True)
 
         exit_status = _stdout_.channel.recv_exit_status()
